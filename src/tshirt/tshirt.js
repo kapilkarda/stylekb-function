@@ -3,6 +3,8 @@ import { Container, Tab, Row, Col, Nav, Form, Button } from 'react-bootstrap';
 import { Stage, Layer, Image , Text, Transformer } from 'react-konva';
 import useImage from 'use-image';
 import ImageUploader from 'react-images-upload';
+import b_texture from './../b_texture.png';
+import f_texture from './../f_texture.png';
 // import { Editor } from 'react-draft-wysiwyg';
 // import './../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import "./tshirt.scss";
@@ -175,7 +177,7 @@ const initialImage =
 const initialText = 
   {
     x: 200,
-    y: 400,
+    y: 300,
     id: 'txt',
   };
 
@@ -185,8 +187,8 @@ const Tshirt = () => {
 	const [images, setImages] = React.useState(initialImage);
 	const [texts, setTexts] = React.useState(initialText);
 	const [selectedImg, setSelectedImg] = React.useState('');
-  const [selectedId, selectShape] = React.useState(null);  
-  const [selectedTextId, selectText] = React.useState(null);
+  const [selectedId, selectShape] = React.useState('img');  
+  const [selectedTextId, selectText] = React.useState('txt');
   const [isDragging, setDragging] = React.useState(false);
   const [fontSize, setFontSize] = React.useState(14);
 	const [color, setColor] = React.useState('#000000');
@@ -194,7 +196,7 @@ const Tshirt = () => {
 	const [shadowEnable, setShadowEnable] = React.useState(false);
 	const [rotation, setRotation] = React.useState(0);	
 	const [bgColor, setBgColor] = React.useState('#FFFFFF');
-	const [bgImage, setBgImg] = React.useState('https://s3.amazonaws.com/eztees-catalog/productmask/4980_f_texture.png')
+	const [bgImage, setBgImg] = React.useState(f_texture)
 	const [tSide,settSide] = React.useState(0);
   const [textData, setTextData] = React.useState('')
 
@@ -314,8 +316,8 @@ const Tshirt = () => {
 				</Col>
 				<Col sm={6} className="canvasContainer">
 				{
-					tSide === 0?<Button variant="primary" onClick={() => {setBgImg('https://s3.amazonaws.com/eztees-catalog/productmask/4980_b_texture.png');settSide(1)}}>Back</Button>:
-					<Button variant="primary" onClick={() => {setBgImg('https://s3.amazonaws.com/eztees-catalog/productmask/4980_f_texture.png');settSide(0)}}>Front</Button>
+					tSide === 0?<Button variant="primary" onClick={() => {setBgImg(b_texture);settSide(1)}}>Back</Button>:
+					<Button variant="primary" onClick={() => {setBgImg(f_texture);settSide(0)}}>Front</Button>
 			
 				}
 					<Stage
@@ -325,7 +327,7 @@ const Tshirt = () => {
 						<Layer>					
 							
 								<FixShape bgColor={bgColor} bgImage={bgImage} />
-								<ColoredRect
+								{selectedImg !== '' && <ColoredRect
 									selectedImg={selectedImg}
 									shapeProps={images}
 									isSelected={selectedId}
@@ -344,7 +346,9 @@ const Tshirt = () => {
 											setDragging(e)
 										}
 									} 
-									/>              
+									/>  
+								}     
+								{textData !== '' &&       
 									<TextRect 
 										text={textData}
 										font={fontSize}
@@ -369,6 +373,7 @@ const Tshirt = () => {
 												setDragging(e)
 											}
 										}  />
+									}
 							        
 						</Layer>
 					</Stage>

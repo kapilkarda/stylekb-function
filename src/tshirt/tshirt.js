@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { Container, Tab, Row, Col, Nav, Form, Button } from 'react-bootstrap';
-import { Stage, Layer, Image , Text, Transformer, Group } from 'react-konva';
+import { Stage, Layer, Image , Text, Transformer } from 'react-konva';
 import useImage from 'use-image';
 import ImageUploader from 'react-images-upload';
 // import { Editor } from 'react-draft-wysiwyg';
@@ -199,8 +199,10 @@ const Tshirt = () => {
   const [textData, setTextData] = React.useState('')
 
 
-  const checkDeselect = (e) => {            
-        setDragging(true)
+  const checkDeselect = (e) => {     
+		if(!isDragging){
+			setDragging(true)
+		}       
   };
   return (
 		<Container fluid>

@@ -1,24 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Front from './front/front';
+import Tshirt from './tshirt/tshirt';
+import Mobile from './mobile/mobile';
+import { Route, BrowserRouter as Router } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Router>
+        <div>
+          <Route path="/" component={Front} />
+          <Route path="/tshirt" component={Tshirt} />
+          <Route path="/mobile" component={Mobile} />
+        </div>
+      </Router>
     </div>
   );
 }

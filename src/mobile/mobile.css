@@ -1,6 +1,6 @@
 .canvasContainer{
-  width:'500px';height:'500px';float:'left'
+  width:'265px';height:'550px';float:'left'
 }
 .canvasContainer > div{
-  width:500px;height:500px; overflow: hidden;
+  width:265px;height:550px; overflow: hidden;
 }

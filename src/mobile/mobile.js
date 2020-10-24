@@ -1,11 +1,15 @@
 import React, {useState} from 'react';
+import { Container, Tab, Row, Col, Nav, Form, Button } from 'react-bootstrap';
 import { Stage, Layer, Image , Text, Transformer, Group } from 'react-konva';
 import useImage from 'use-image';
+import ImageUploader from 'react-images-upload';
+import FontPicker from "font-picker-react";
+import m_texture from "./../m_texture.png";
 import "./mobile.css";
 
 
 
-const TextRect = ({text,font,color,shapeProps,isSelected, onSelect, onChange,onDragEndM,onDragStartM }) => {  
+const TextRect = ({text,font,color,fontFamily,shadowColor,shadowEnable,rotation,shapeProps,isSelected, onSelect, onChange,onDragEndM,onDragStartM}) => {  
   const shapeRef = React.useRef();
   const trRef = React.useRef();
   React.useEffect(() => {
@@ -23,8 +27,13 @@ const TextRect = ({text,font,color,shapeProps,isSelected, onSelect, onChange,onD
           fill={color}
           onDragStart={(e) => {
             onDragStartM(true)
-          }}
-          fontSize={font}
+          }}          
+					fontSize={font}
+					fontFamily={fontFamily}
+					shadowColor={shadowColor}
+					shadowEnabled={shadowEnable}
+					shadowOffset={{x:1,y:1}}
+					rotation={rotation}
           onClick={onSelect}
           onTap={onSelect}
           ref={shapeRef}
@@ -74,8 +83,8 @@ const TextRect = ({text,font,color,shapeProps,isSelected, onSelect, onChange,onD
       );
   }
 
-const ColoredRect = ({shapeProps,isSelected, onSelect, onChange,onDragEndM,onDragStartM }) => {  
-const [image] = useImage('https://konvajs.org/assets/lion.png');
+const ColoredRect = ({selectedImg,shapeProps,isSelected, onSelect, onChange,onDragEndM,onDragStartM }) => {  
+const [image] = useImage(selectedImg);
 const [isDragging,setIsDragging] = useState(false);
 const shapeRef = React.useRef();
 const trRef = React.useRef();
@@ -147,7 +156,7 @@ React.useEffect(() => {
 }
 
 const FixShape = () => {
-  const [image] = useImage('https://www.yourprint.in/wp-content/uploads/2019/03/Xiaomi-Redmi-Note-7.png');
+  const [image] = useImage(m_texture);
       return (
         <Image
           image={image}         
@@ -205,27 +214,103 @@ const initialText =
 
 
 const Mobile = () => {
-  const [images, setImages] = React.useState(initialImage);
-  const [texts, setTexts] = React.useState(initialText);
-  const [selectedId, selectShape] = React.useState(null);  
-  const [selectedTextId, selectText] = React.useState(null);
+	const [images, setImages] = React.useState(initialImage);
+	const [texts, setTexts] = React.useState(initialText);
+	const [selectedImg, setSelectedImg] = React.useState('');
+  const [selectedId, selectShape] = React.useState('img');  
+  const [selectedTextId, selectText] = React.useState('txt');
   const [isDragging, setDragging] = React.useState(false);
   const [fontSize, setFontSize] = React.useState(14);
-  const [color, setColor] = React.useState('#000');
-  const [textData, setTextData] = React.useState('Write something')
+  const [fontFamily, setFontFamily] = React.useState("Open Sans");
+	const [color, setColor] = React.useState('#000000');
+	const [shadowColor, setShadowColor] = React.useState('');
+	const [shadowEnable, setShadowEnable] = React.useState(false);
+	const [rotation, setRotation] = React.useState(0);	
+  const [textData, setTextData] = React.useState('')
 
 
   const checkDeselect = (e) => {            
         setDragging(true)
   };
   return (
-    <>
-    <div style={{width:'200px', height:'300px',float:'left'}}>
-      <input type="text" value={textData} onChange={(e) => setTextData(e.target.value)} />
-      <input type="number" value={fontSize} onChange={(e) => setFontSize(e.target.value)} />
-      <input type="color" value={color} onChange={(e) => setColor(e.target.value)} />
-    </div>
-    <div className="canvasContainer">    
+      <Container fluid>
+        <Row>
+          <Col sm={6}>
+            <Tab.Container id="left-tabs-example" defaultActiveKey="second">
+            <Row>
+              <Col sm={3} className="pills-box">
+                <Nav variant="pills" className="flex-column">
+                  <Nav.Item>
+                    <Nav.Link eventKey="second">Text</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="third">Image</Nav.Link>
+                  </Nav.Item>
+                </Nav>
+              </Col>
+              <Col sm={9}>
+                <Tab.Content>
+                  <Tab.Pane eventKey="second">
+                    <h4 className="widget-title">
+                      Add New Text
+                    </h4>
+                    <Form.Group>
+                      <Form.Label>Type here</Form.Label>
+                       <Form.Control type="text" onChange={(e) => setTextData(e.target.value)} value={textData} placeholder="Type something here" />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Font Size</Form.Label>
+                       <Form.Control type="range" onChange={(e) => setFontSize(e.target.value)} value={fontSize} placeholder="" />
+                    </Form.Group>									
+                    <Form.Group>
+                      <Form.Label>Font Color</Form.Label>
+                       <Form.Control type="color" onChange={(e) => setColor(e.target.value)} value={color} placeholder="" />
+                    </Form.Group>	
+                    <Form.Group>
+                      <Form.Label>Font Family</Form.Label>
+                      <FontPicker
+                        apiKey="AIzaSyA94amz2aeB9v66mvhYBEPVubflbyN6z-k"
+                        className="form-control"
+                        activeFontFamily={fontFamily}
+                        onChange={(nextFont) =>
+                            setFontFamily(nextFont.family)
+                        }
+                    />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Outlie</Form.Label>
+                       <Form.Control type="checkbox" onChange={(e) => setShadowEnable(!shadowEnable)} value={shadowEnable} placeholder="" />
+                    </Form.Group>																	
+                    <Form.Group>
+                      <Form.Label>Outline Color</Form.Label>
+                       <Form.Control type="color" disabled={!shadowEnable} onChange={(e) => setShadowColor(e.target.value)} value={shadowColor} placeholder="" />
+                    </Form.Group>
+                    <Form.Group>
+                      <Form.Label>Arc</Form.Label>
+                       <Form.Control type="range" min="0" max="360" onChange={(e) => setRotation(e.target.value)} value={rotation} placeholder="" />
+                    </Form.Group>
+                  </Tab.Pane>
+                  <Tab.Pane eventKey="third">
+                    <Col>
+                      <h4 className="widget-title">
+                        UPLOAD ART
+                      </h4>
+                      <ImageUploader
+                          withIcon={true}
+                          buttonText='Choose images'
+                          onChange={(e) => setSelectedImg(URL.createObjectURL(e[0]))}
+                          imgExtension={['.jpg', '.gif', '.png', '.gif']}
+                          maxFileSize={5242880}
+                          singleImage={true}
+                      />
+                    </Col>
+                  </Tab.Pane>
+                  </Tab.Content>
+              </Col>
+            </Row>
+          </Tab.Container>
+          </Col>
+          <Col sm={6} className="canvasContainer"> 
       <Stage
       onMouseDown={checkDeselect}
       onTouchStart={checkDeselect}
@@ -233,7 +318,9 @@ const Mobile = () => {
         <Layer>
           
           <Portal selector=".top-layer" enabled={isDragging}>
+          {selectedImg !== '' && 
             <ColoredRect
+              selectedImg={selectedImg}
               shapeProps={images}
               isSelected={selectedId}
               onSelect={() => {
@@ -252,10 +339,16 @@ const Mobile = () => {
                 }
               } 
               />              
+            }
+            {textData !== '' &&  
               <TextRect 
                 text={textData}
                 font={fontSize}
                 color={color}
+                fontFamily={fontFamily}
+                shadowColor={shadowColor}
+                shadowEnable={shadowEnable}
+                rotation={rotation}
                 shapeProps={texts}
                 isSelected={selectedTextId}
                 onSelect={() => {
@@ -273,14 +366,16 @@ const Mobile = () => {
                     setDragging(e)
                   }
                 }  />
+              }
             </Portal>            
             <FixShape />
         </Layer>
         <Layer name="top-layer" />
       </Stage>
-    </div>
-    </>
-  );
+      </Col>
+			</Row>
+		</Container>
+  )
 }
 
 export default Mobile;

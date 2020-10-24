@@ -3,6 +3,7 @@ import { Container, Tab, Row, Col, Nav, Form, Button } from 'react-bootstrap';
 import { Stage, Layer, Image , Text, Transformer } from 'react-konva';
 import useImage from 'use-image';
 import ImageUploader from 'react-images-upload';
+import FontPicker from "font-picker-react";
 import b_texture from './../b_texture.png';
 import f_texture from './../f_texture.png';
 // import { Editor } from 'react-draft-wysiwyg';
@@ -11,7 +12,7 @@ import "./tshirt.scss";
 
 
 
-const TextRect = ({text,font,color,shadowColor,shadowEnable,rotation,shapeProps,isSelected, onSelect, onChange,onDragEndM,onDragStartM }) => {  
+const TextRect = ({text,font,color,fontFamily,shadowColor,shadowEnable,rotation,shapeProps,isSelected, onSelect, onChange,onDragEndM,onDragStartM }) => {  
   const shapeRef = React.useRef();
   const trRef = React.useRef();
   React.useEffect(() => {
@@ -31,6 +32,7 @@ const TextRect = ({text,font,color,shadowColor,shadowEnable,rotation,shapeProps,
             onDragStartM(true)
           }}
 					fontSize={font}
+					fontFamily={fontFamily}
 					shadowColor={shadowColor}
 					shadowEnabled={shadowEnable}
 					shadowOffset={{x:1,y:1}}
@@ -191,6 +193,7 @@ const Tshirt = () => {
   const [selectedTextId, selectText] = React.useState('txt');
   const [isDragging, setDragging] = React.useState(false);
   const [fontSize, setFontSize] = React.useState(14);
+  const [fontFamily, setFontFamily] = React.useState("Open Sans");
 	const [color, setColor] = React.useState('#000000');
 	const [shadowColor, setShadowColor] = React.useState('');
 	const [shadowEnable, setShadowEnable] = React.useState(false);
@@ -282,6 +285,17 @@ const Tshirt = () => {
    									<Form.Control type="color" onChange={(e) => setColor(e.target.value)} value={color} placeholder="" />
 									</Form.Group>	
 									<Form.Group>
+										<Form.Label>Font Family</Form.Label>
+										<FontPicker
+											apiKey="AIzaSyA94amz2aeB9v66mvhYBEPVubflbyN6z-k"
+											className="form-control"
+											activeFontFamily={fontFamily}
+											onChange={(nextFont) =>
+													setFontFamily(nextFont.family)
+											}
+									/>
+									</Form.Group>
+									<Form.Group>
 										<Form.Label>Outlie</Form.Label>
    									<Form.Control type="checkbox" onChange={(e) => setShadowEnable(!shadowEnable)} value={shadowEnable} placeholder="" />
 									</Form.Group>																	
@@ -353,6 +367,7 @@ const Tshirt = () => {
 										text={textData}
 										font={fontSize}
 										color={color}
+										fontFamily={fontFamily}
 										shadowColor={shadowColor}
 										shadowEnable={shadowEnable}
 										rotation={rotation}
